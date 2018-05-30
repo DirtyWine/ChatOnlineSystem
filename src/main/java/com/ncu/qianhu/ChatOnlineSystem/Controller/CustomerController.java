@@ -5,10 +5,7 @@ import com.ncu.qianhu.ChatOnlineSystem.Mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: Cross
@@ -41,6 +38,25 @@ public class CustomerController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("error",HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/login")
+    public ResponseEntity<String> login(Customer requestCustomer) {
+        System.out.println(requestCustomer.toString());
+        try{
+            Customer queryCustomer = customerMapper.find(requestCustomer);
+            if (null == queryCustomer) {
+                return new ResponseEntity<>("username not exists", HttpStatus.OK);
+            } else if (queryCustomer.getPassword().equals(requestCustomer.getPassword())) {
+                return new ResponseEntity<>("login succeed\t welcome, "+queryCustomer.getName(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("password wrong", HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("error",HttpStatus.OK);
         }
     }
 }
