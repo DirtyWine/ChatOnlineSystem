@@ -8,11 +8,14 @@
     <input v-model="user.password"/>
     <br>
     <button @click="test()">test</button>
+    <br>
+    <button @click="goChat()">goChat</button>
+    <h1>{{author}}</h1>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
+
 export default {
   name: 'HelloWorld',
   data () {
@@ -25,10 +28,15 @@ export default {
 
     }
   },
+  computed: {
+    author () {
+      return this.$store.state.user
+    }
+  },
   methods: {
     test: function () {
       var thisMsg = this
-      axios.get('http://127.0.0.1:8080/customer/login?name='+this.user.username+'&password='+this.user.password)
+      this.axios.get('/customer/login?name='+this.user.username+'&password='+this.user.password)
         .then(function (response) {
           console.log(response.data)
           thisMsg.msg = response.data
@@ -37,6 +45,9 @@ export default {
           console.log(error)
           thisMsg.msg = error.data
         })
+    },
+    goChat: function () {
+      this.$router.push({name:'ChatWindow'})
     }
   }
 }
