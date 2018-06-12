@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  var stompClient = null
+  var thisStomp = null
 
   export default {
     name: "ChatWindow",
@@ -25,30 +25,30 @@
       }
     },
     created() {
-
     },
     methods: {
       connect: function () {
         var that = this
         var socket = new SockJS('http://127.0.0.1:8080/server')
-        stompClient = Stomp.over(socket)
-        stompClient.connect({
+        thisStomp = Stomp.over(socket)
+        thisStomp.connect({
           'name': this.name
         },function (frame) {
           that.isConnected = true
           console.log('Connected:'+frame)
-          stompClient.subscribe('/topic/getResponse',function (response) {
+          thisStomp.subscribe('/topic/getResponse',function (response) {
             that.msg = JSON.parse(response.body).responseMessage
           })
-          stompClient.subscribe('/user/queue/dot',function (response) {
+          thisStomp.subscribe('/user/queue/dot',function (response) {
             that.msg = JSON.parse(response.body).responseMessage
           })
         })
       },
 
       disconnect: function () {
-        if (stompClient != null) {
-          stompClient.disconnect()
+        if (thisStomp != null) {
+          thisStomp.disconnect()
+          this.$store.state.stompClient = null
         }
         this.isConnected = false
         console.log('Disconnected')
@@ -57,7 +57,7 @@
       sendName: function () {
         var myName = this.name
         console.log('name: '+this.name)
-        stompClient.send('/app/message',{},JSON.stringify({'name':myName}))
+        thisStomp.send('/app/message',{},JSON.stringify({'name':myName}))
       }
     }
   }

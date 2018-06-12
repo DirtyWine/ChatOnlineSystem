@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * @Author: Cross
  * @Description:
@@ -21,36 +24,35 @@ public class CustomerController {
     @Autowired
     private CustomerMapper customerMapper;
 
+//    @CrossOrigin
+//    @PostMapping("/test")
+//    public ResponseEntity<String> test(Customer requestCustomer) {
+//        System.out.println(requestCustomer.toString());
+//        try {
+//            Customer queryCustomer = customerMapper.find(requestCustomer);
+//            if (null == queryCustomer) {
+//                return new ResponseEntity<>("您输入的用户名不存在", HttpStatus.NOT_FOUND);
+//            }
+//            else {
+//                return new ResponseEntity<>("登录成功\t"+queryCustomer.getGender(), HttpStatus.OK);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>("error",HttpStatus.NOT_FOUND);
+//        }
+//    }
+
     @CrossOrigin
-    @GetMapping("/test")
-    public ResponseEntity<String> test(Customer requestCustomer) {
-
-        System.out.println(requestCustomer.toString());
-        try {
-            Customer queryCustomer = customerMapper.find(requestCustomer);
-            if (null == queryCustomer) {
-                return new ResponseEntity<>("您输入的用户名不存在", HttpStatus.NOT_FOUND);
-            }
-            else {
-                return new ResponseEntity<>("登录成功\t"+queryCustomer.getGender(), HttpStatus.OK);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("error",HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @CrossOrigin
-    @GetMapping("/login")
-    public ResponseEntity<String> login(Customer requestCustomer) {
+    @PostMapping(value = "/login",consumes="application/json")
+    public ResponseEntity<String> login(@RequestBody Customer requestCustomer) {
         System.out.println(requestCustomer.toString());
         try{
-            Customer queryCustomer = customerMapper.find(requestCustomer);
-            if (null == queryCustomer) {
+            ArrayList<Customer> queryCustomer = customerMapper.find(requestCustomer);
+            if ( queryCustomer.isEmpty()) {
                 return new ResponseEntity<>("username not exists", HttpStatus.OK);
-            } else if (queryCustomer.getPassword().equals(requestCustomer.getPassword())) {
-                return new ResponseEntity<>("login succeed\t welcome, "+queryCustomer.getName(), HttpStatus.OK);
+            } else if (queryCustomer.get(0).getPassword().equals(requestCustomer.getPassword())) {
+                return new ResponseEntity<>("login succeed\t welcome, "+queryCustomer.get(0).getName(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("password wrong", HttpStatus.OK);
             }

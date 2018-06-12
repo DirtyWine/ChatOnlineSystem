@@ -7,8 +7,9 @@ import axios from './axios'
 import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
 import store from './vuex/store'
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 
 
 router.beforeEach((to,from,next) => {
@@ -31,6 +32,9 @@ Vue.config.productionTip = false
 Vue.use(VueAxios,axios)
 Vue.use(Vuex)
 Vue.use(ElementUI)
+
+
+Vue.component(CollapseTransition.name, CollapseTransition)
 
 /* eslint-disable no-new */
 new Vue({

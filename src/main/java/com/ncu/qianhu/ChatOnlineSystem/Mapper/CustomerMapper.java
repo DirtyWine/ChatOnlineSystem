@@ -4,6 +4,8 @@ import com.ncu.qianhu.ChatOnlineSystem.Bean.Customer;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 /**
  * @Author: Cross
  * @Description:
@@ -14,5 +16,5 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper
 public interface CustomerMapper {
-    Customer find(Customer record);
+    ArrayList<Customer> find(Customer record);
 }
