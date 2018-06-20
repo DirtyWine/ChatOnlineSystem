@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ncu.qianhu.ChatOnlineSystem.Mapper.TagMapper">
+    <resultMap id="BaseResultMap" type="com.ncu.qianhu.ChatOnlineSystem.Bean.Tag">
+        <id column="tag_id" property="tagId"/>
+        <result column="tag_sender_id" property="tagSenderId"/>
+        <result column="tag_receiver_id" property="tagReceiverId"/>
+        <result column="tag_content" property="tagContent"/>
+    </resultMap>
+
+    <select id="findTag" resultMap="BaseResultMap">
+        SELECT *
+        FROM tag
+        WHERE tag_receiver_id= #{tagReceiverId,jdbcType=VARCHAR}
+        AND tag_sender_id= #{tagSenderId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="findSender" resultMap="BaseResultMap">
+        SELECT *
+        FROM tag
+        WHERE tag_receiver_id= #{tagReceiverId,jdbcType=VARCHAR}
+        GROUP BY tag_sender_id
+    </select>
+
+    <insert id="insertTag">
+        INSERT INTO
+        tag(tag_sender_id, tag_receiver_id, tag_content)
+        VALUES(#{tagSenderId,jdbcType=VARCHAR},#{tagReceiverId,jdbcType=VARCHAR},#{tagContent,jdbcType=VARCHAR})
+    </insert>
+
+    <delete id="deleteTag">
+        DELETE
+        FROM tag
+        WHERE (tag_sender_id=#{tagSenderId,jdbcType=VARCHAR} AND tag_receiver_id=#{tagReceiverId,jdbcType=VARCHAR})
+         OR (tag_sender_id=#{tagReceiverId,jdbcType=VARCHAR} AND tag_receiver_id=#{tagSenderId,jdbcType=VARCHAR})
+    </delete>
+
+</mapper>

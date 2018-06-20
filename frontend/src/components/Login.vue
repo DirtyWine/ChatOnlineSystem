@@ -19,9 +19,9 @@
                 <img class="login-img item-left" src="../assets/login.png">
               </el-form-item>
               <!--Input username-->
-              <el-form-item class="input-holder" prop="user_id">
+              <el-form-item class="input-holder" prop="userId">
                 <el-input
-                  v-model="user.user_id"
+                  v-model="user.userId"
                   @keyup.enter.native="signIn('user')"
                   type="text"
                   placeholder="User ID"
@@ -29,9 +29,9 @@
                 </el-input>
               </el-form-item>
               <!--Input password-->
-              <el-form-item class="input-holder" prop="user_password">
+              <el-form-item class="input-holder" prop="userPassword">
                 <el-input
-                  v-model="user.user_password"
+                  v-model="user.userPassword"
                   @keyup.enter.native="signIn('user')"
                   type="password"
                   placeholder="Password"
@@ -40,7 +40,7 @@
               </el-form-item>
               <!--Forget password-->
               <el-form-item>
-                <a href="#" class="item-right">Forget passwords?</a>
+                <a href="#" @click="forget()" class="item-right">Forget passwords?</a>
               </el-form-item>
               <!--Submit button-->
               <el-form-item>
@@ -63,14 +63,14 @@
       data() {
         return {
           user: {
-            user_id: '',
-            user_password: ''
+            userId: '',
+            userPassword: ''
           },
           contentRequired: {
-            user_id: [
+            userId: [
               { required: true, message: 'Username required', trigger: 'blur'}
             ],
-            user_password: [
+            userPassword: [
               { required: true, message: 'Password required', trigger: 'blur'}
             ]
           }
@@ -78,14 +78,79 @@
       },
     methods: {
       signIn: function (formName) {
+        var that = this
         this.$refs[formName].validate((valid) => {
           if (valid) {
             console.log('submit succeed!');
+            var id = this.user.userId
+            this.axios.post('/user/login',{
+              userId: this.user.userId,
+              userPassword: this.user.userPassword
+            })
+              .then(function (response) {
+                console.log(response)
+                var msg = response.data
+                if(msg == 'wrong password'){
+                  that.$notify({
+                    title: 'Whoops',
+                    message: 'Wrong Password!',
+                  })
+                }
+                else if(msg=='userID not exits'){
+                  that.$notify({
+                    title: 'Whoops',
+                    message: 'This ID dose not exit',
+                  })
+                }
+                else if (msg == 'error'){
+                  that.$notify({
+                    title: 'Whoops',
+                    message: 'Something is wrong, try again',
+                  })
+                }
+                else {
+                  that.$message({
+                    type: 'success',
+                    message: 'Yeah,Login success',
+                  })
+                  that.$store.commit("newName",id)
+                  that.axios.post('/user/info',{
+                    userId: that.$store.state.name
+                  })
+                    .then(function (response) {
+                      console.log(response.data)
+                      var data = response.data;
+                      that.$store.commit("newAvatar",data.userAvatar)
+                      that.$store.commit("newNickname",data.userNickname)
+                      that.$router.push({name:'test'})
+                    })
+                    .catch(function (error) {
+                      console.log(error)
+                    })
+                }
+
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+
           } else {
             console.log('error submit!!');
             return false;
           }
         })
+      },
+
+      forget:function() {
+        this.$alert('你是猪吗', '密码都会忘', {
+          confirmButtonText: '是',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
       }
     }
   }

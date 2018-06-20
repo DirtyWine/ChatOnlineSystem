@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ncu.qianhu.ChatOnlineSystem.Mapper.FriendMapper">
+    <resultMap id="BaseResultMap" type="com.ncu.qianhu.ChatOnlineSystem.Bean.Friend">
+        <id column="friend_a_id" property="friendAId"/>
+        <id column="friend_b_id" property="friendBId"/>
+        <result column="friend_remark" property="friendRemark"/>
+        <result column="friend_stat" property="friendStat"/>
+    </resultMap>
+
+    <select id="findFriend" resultMap="BaseResultMap">
+        SELECT *
+        FROM friend
+        WHERE friend_a_id=#{friendAId,jdbcType=VARCHAR}
+        AND friend_stat = 1
+    </select>
+
+    <select id="findFriendReq" resultMap="BaseResultMap">
+        SELECT *
+        FROM friend
+        WHERE friend_b_id=#{friendBId,jdbcType=VARCHAR}
+        AND friend_stat = 0
+    </select>
+
+    <select id="findRemark" resultMap="BaseResultMap">
+        SELECT *
+        FROM friend
+        WHERE friend_a_id=#{friendAId,jdbcType=VARCHAR}
+        AND friend_b_id = #{friendBId,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertFriend">
+        INSERT INTO
+        friend(friend_a_id, friend_b_id, friend_remark, friend_stat)
+        VALUES (#{friendAId,jdbcType=VARCHAR},#{friendBId,jdbcType=VARCHAR},
+        #{friendRemark,jdbcType=VARCHAR},#{friendStat})
+    </insert>
+
+    <update id="updateStat">
+        UPDATE friend
+        SET friend_stat=1
+        WHERE (friend_a_id=#{friendAId,jdbcType=VARCHAR} AND friend_b_id=#{friendBId,jdbcType=VARCHAR})
+        OR (friend_a_id=#{friendBId,jdbcType=VARCHAR} AND friend_b_id=#{friendAId,jdbcType=VARCHAR})
+    </update>
+
+    <update id="updateRemark">
+        UPDATE friend
+        SET friend_remark=#{friendRemark,jdbcType=VARCHAR}
+        WHERE (friend_a_id=#{friendAId,jdbcType=VARCHAR} AND friend_b_id=#{friendBId,jdbcType=VARCHAR})
+    </update>
+
+    <delete id="deleteFriend">
+        DELETE
+        FROM friend
+        WHERE (friend_a_id=#{friendAId,jdbcType=VARCHAR} AND friend_b_id=#{friendBId,jdbcType=VARCHAR})
+        OR (friend_a_id=#{friendBId,jdbcType=VARCHAR} AND friend_b_id=#{friendAId,jdbcType=VARCHAR})
+    </delete>
+
+</mapper>

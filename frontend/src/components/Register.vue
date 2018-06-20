@@ -23,6 +23,18 @@
               clearable>
             </el-input>
           </el-form-item>
+          <!--Avatar-->
+          <el-form-item  class="input-holder">
+            <img style="height: 200px;width: 200px;" :src="register.user_avatar"/>
+            <el-select v-model="register.user_avatar" placeholder="*Choose your avatar">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <!--Password-->
           <el-form-item  class="input-holder" prop="user_password">
             <el-input
@@ -49,14 +61,15 @@
             </el-radio-group>
           </el-form-item>
           <!--Birthday-->
-          <el-form-item  class="input-holder" prop="user_birthday">
+          <el-form-item  class="input-holder">
             <el-date-picker
               v-model="register.user_birthday"
               align="right"
               class="item-left"
               prefix-icon="none"
               placeholder="*Birthday"
-              type="date">
+              type="date"
+              value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
           <!--Hometown-->
@@ -67,9 +80,17 @@
               clearable>
             </el-input>
           </el-form-item>
+          <!--Sign-->
+          <el-form-item  class="input-holder" prop="user_sign">
+            <el-input
+              v-model="register.user_sign"
+              placeholder="*Introduce yourself"
+              clearable>
+            </el-input>
+          </el-form-item>
           <!--Submit button-->
           <el-form-item>
-            <el-button @click="submitRegister('register')" type="info" class="btn-block">Sign up</el-button>
+            <el-button @click="submitregister()" type="info" class="btn-block">Sign up</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -103,15 +124,33 @@
       }
 
       return {
+        options: [{
+          value: require('../assets/avatar/m1.jpg'),
+          label: 'Loki'
+        }, {
+          value: require('../assets/avatar/f1.jpg'),
+          label: 'Katarina'
+        }, {
+          value: require('../assets/avatar/m2.jpg'),
+          label: 'Musashi'
+        }, {
+          value: require('../assets/avatar/f2.jpg'),
+          label: 'Qi'
+        }, {
+          value: require('../assets/avatar/m3.jpg'),
+          label: 'Rogue'
+        }],
+
         register: {
           user_id: '',
           user_nickname: '',
           user_password: '',
           password_confirm: '',
+          user_avatar: require('../assets/avatar/m1.jpg'),
           user_gender: 'male',
-          protocol_agreed: true,
-          user_birthday:'',
-          user_hometown: ''
+          user_birthday:'1995-01-01',
+          user_hometown: '',
+          user_sign:''
         },
         rule_register: {
           user_id: [
@@ -126,25 +165,70 @@
           password_confirm: [
             { validator: validateCheckPass, trigger: 'blur' }
           ],
-          user_birthday: [
-            { required: true, message: 'Please input your birthday', trigger: 'blur' }
-          ],
           user_hometown: [
             { required: true, message: 'Please input your hometown', trigger: 'blur' }
+          ],
+          user_sign: [
+            { required: true, message: 'Please introduce yourself', trigger: 'blur' }
           ]
         }//rule_register
       }
     },
     methods: {
-      submitRegister: function (formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log('submit succeed!')
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
+      submitregister:function() {
+        if(this.register.user_id==''||this.register.user_nickname==''||this.register.user_password==''||
+          this.register.user_gender==''||this.register.user_hometown==''|| this.register.user_sign==''){
+          this.$alert('信息还没填全呢', '天呐', {
+            confirmButtonText: '返回',})
+        }
+        else if(this.register.user_password!=this.register.password_confirm){
+          this.$alert('两次密码不一样啊兄dei', '你在干什么', {
+            confirmButtonText: '返回',})
+        }
+        else{
+          var thisMsg = this
+          this.axios.post('/user/register',{
+            userId: this.register.user_id,
+            userNickname: this.register.user_nickname,
+            userPassword: this.register.user_password,
+            userAvatar: this.register.user_avatar,
+            userGender: this.register.user_gender,
+            userBirthday: this.register.user_birthday,
+            userHome: this.register.user_hometown,
+            userSign: this.register.user_sign
+          })
+            .then(function (response) {
+              console.log(response)
+              var msg  = response.data
+              if(msg=='Successfully registered'){
+                thisMsg.$notify({
+                  title: '提示',
+                  message: '注册成功',
+                });
+                thisMsg.$router.push({name:'Login'})
+              }
+              else if(msg=='This ID has been registered'){
+                thisMsg.$notify({
+                  title: '提示',
+                  message: '该ID已被注册，请重新输入',
+                });
+                thisMsg.$router.push({name:'Register'})
+              }
+              else{
+                thisMsg.$notify({
+                  title: '提示',
+                  message: '出错了，请重试',
+                });
+                thisMsg.$router.push({name:'Register'})
+              }
+
+            })
+            .catch(function (error) {
+              console.log(error)
+
+            })
+        }
+
       },
 
       goChat: function () {
@@ -152,6 +236,7 @@
       }
     }
   }
+
 </script>
 
 <style>

@@ -36,10 +36,13 @@
         },function (frame) {
           that.isConnected = true
           console.log('Connected:'+frame)
-          thisStomp.subscribe('/topic/getResponse',function (response) {
+          thisStomp.subscribe('/topic/chat',function (response) {
             that.msg = JSON.parse(response.body).responseMessage
           })
-          thisStomp.subscribe('/user/queue/dot',function (response) {
+          thisStomp.subscribe('/user/queue/messageController',function (response) {
+            that.msg = JSON.parse(response.body).responseMessage
+          })
+          thisStomp.subscribe('/user/queue/friendController',function (response) {
             that.msg = JSON.parse(response.body).responseMessage
           })
         })

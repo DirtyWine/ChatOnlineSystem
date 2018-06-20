@@ -2,23 +2,22 @@ package com.ncu.qianhu.ChatOnlineSystem.Bean;
 
 import lombok.*;
 
+import java.util.ArrayList;
+
 /**
  * @Author: Cross
  * @Description:
- * @Date: 2018/6/8
+ * @Date: 2018/6/14
  * @Modified by
  */
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ServerMessage {
+public class TagResult {
     private String remark;
-    private String location = "left";
-    private String avatar;
-    private String content;
-    private String time;
-    private String id;
+    private ArrayList<String> tag;
 }

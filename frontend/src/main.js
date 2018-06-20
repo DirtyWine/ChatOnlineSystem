@@ -14,8 +14,8 @@ import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 
 router.beforeEach((to,from,next) => {
   if(to.meta.requireAuth) {
-    console.log(store.state.user)
-    if(store.state.user) {
+    console.log(store.state.name)
+    if(store.state.name) {
       next()
     } else {
       next({

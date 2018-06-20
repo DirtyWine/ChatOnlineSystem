@@ -14,8 +14,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
+      name: 'Login',
+      component: Login,
 
     },
     {
@@ -27,11 +27,6 @@ export default new Router({
       component: ChatWindow
     },
     {
-      path: '/login',
-      name: 'Login',
-      component: Login
-    },
-    {
       path: '/register',
       name: 'Register',
       component: Register
@@ -39,6 +34,9 @@ export default new Router({
     {
       path: '/test',
       name: 'test',
+      meta: {
+        requireAuth: true,
+      },
       component: ChatTest
     }
   ]

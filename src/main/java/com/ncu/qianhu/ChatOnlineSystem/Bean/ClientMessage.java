@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 /**
  * @Author: Cross
  * @Description:
@@ -17,7 +19,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientMessage {
-
-    private String name;
-
+    private String location = "left";
+    private String avatar;
+    private String content;
+    private String time;
+    private String id;
 }

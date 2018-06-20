@@ -5,20 +5,20 @@ import lombok.*;
 /**
  * @Author: Cross
  * @Description:
- * @Date: 2018/6/8
+ * @Date: 2018/6/13
  * @Modified by
  */
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ServerMessage {
-    private String remark;
-    private String location = "left";
-    private String avatar;
-    private String content;
-    private String time;
+public class ServerFriend {
     private String id;
+    private String avatar;
+    private String remark;
+    private String gender;
+    private String sign;
+    private String home;
 }
