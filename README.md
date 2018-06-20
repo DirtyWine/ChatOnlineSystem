@@ -1,7 +1,6 @@
 # ChatOnlineSystem
 A test demo for Java Web final exam <br>
 Powered by Vue + Springboot + MyBatis + websocket <br>
-目前只是基本框架，已经搭建Vue+Springboot，配好了mybatis。没有WebSocket
 # Requirement
 * Node.js / MySql / Idea 
 * 为了可以成功运行这个测试案例，你需要先完成以下配置
